@@ -4,6 +4,7 @@
   "main": "index.js",
   "scripts": {
     "compile": "truffle compile",
+    "build": "echo \"Survey webapp not ready\" && mkdir -p app/build && exit 1 && cd app && yarn && yarn build",
     "deploy:rpc": "truffle exec scripts/deploy.js --network rpc",
     "deploy:rinkeby": "truffle exec scripts/deploy.js --network rinkeby",
     "deploy:devnet": "truffle exec scripts/deploy.js --network devnet",
@@ -24,7 +25,7 @@
   "license": "GPL-3.0",
   "description": "",
   "devDependencies": {
-    "@aragon/cli": "^2.0.4",
+    "@aragon/cli": "^4.0.0",
     "@aragon/test-helpers": "^1.0.0",
     "babel-helpers": "^6.24.1",
     "babel-polyfill": "^6.26.0",
@@ -40,7 +41,7 @@
     "solium": "^1.0.4",
     "truffle": "4.0.5",
     "truffle-hdwallet-provider": "0.0.3",
-    "webpack": "3.10.0"
+    "yarn": "^1.6.0"
   },
   "dependencies": {
     "@aragon/os": "^3.1.4"
