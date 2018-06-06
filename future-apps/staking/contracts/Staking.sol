@@ -43,7 +43,7 @@ contract Staking is ERCStaking, AragonApp {
   // TODO: figure out a way to get lock from metadata, given changing lock ids
   // mapping (bytes32 => LockLocation) lockByMetadata;
 
-  event Locked(address indexed account, uint256 lockId, bytes32 metadata);
+  event Locked(address indexed account, uint256 lockId, uint256 amount, bytes32 metadata);
   event Unlocked(address indexed account, address indexed unlocker, uint256 oldLockId);
 
   event MovedTokens(address indexed from, address indexed to, uint256 amount);
@@ -127,7 +127,7 @@ contract Staking is ERCStaking, AragonApp {
     Lock memory newLock = Lock(amount, Timespan(lockEnds, TimeUnit(lockUnit)), unlocker, metadata);
     lockId = accounts[msg.sender].locks.push(newLock) - 1;
 
-    Locked(msg.sender, lockId, metadata);
+    Locked(msg.sender, lockId, amount, metadata);
 
     if (lockScript.length > 0) {
       runScript(lockScript, data, new address[](0));

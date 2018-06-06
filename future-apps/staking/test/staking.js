@@ -13,6 +13,7 @@ contract('Staking app', accounts => {
   const other = accounts[1]
   const balance = 1000
 
+  const zeroAddress = "0x0000000000000000000000000000000000000000000000000000000000000000"
   const TIME_UNIT_BLOCKS = 0
   const TIME_UNIT_SECONDS = 1
 
@@ -157,7 +158,7 @@ contract('Staking app', accounts => {
       assert.equal(lock[1], TIME_UNIT_SECONDS, "lock time unit should match")
       assert.equal(lock[2], initialTimestamp + time, "lock time end should match")
       assert.equal(lock[3], other, "unlocker should match")
-      assert.equal(lock[4], "0x0000000000000000000000000000000000000000000000000000000000000000", "lock metadata should match")
+      assert.equal(lock[4], zeroAddress, "lock metadata should match")
 
       // can not unlock
       assert.isFalse(await app.canUnlock(owner, lockId))
@@ -173,15 +174,13 @@ contract('Staking app', accounts => {
     })
 
     it('locks using blocks', async () => {
-      const mockCounter = await getContract('Counter').new()
       const amount = 100
-      const blocks = 10
+      const blocks = 2
       await token.approve(app.address, amount)
       await app.stake(amount, '')
       const initialBlockNumber = await getBlockNumber()
       const r = await app.lock(amount / 2, TIME_UNIT_BLOCKS, initialBlockNumber + blocks, other, '', '')
       const lockId = getEvent(r, 'Locked', 'lockId')
-      await timeTravel(2000)
 
       // check lock values
       const lock = await app.lastLock(owner)
@@ -197,11 +196,9 @@ contract('Staking app', accounts => {
       assert.equal((await app.locksCount(owner)).valueOf(), parseInt(lockId, 10) + 1, "last lock id should match")
 
       // we just send dumb transactions to increment block number
-      let blockNumber
-      do {
-        await mockCounter.increment()
-        blockNumber = await getBlockNumber()
-      } while( blockNumber <= initialBlockNumber + blocks)
+      for (let x of new Array(blocks)) {
+        web3.eth.sendTransaction({ from: owner, to: owner, value: 1, gasPrice: 1 })
+      }
       // can unlock
       assert.isTrue(await app.canUnlock(owner, lockId))
     })
@@ -338,7 +335,7 @@ contract('Staking app', accounts => {
       assert.equal((await app.locksCount(owner)).valueOf(), 1, "there shouldn't be locks")
     })
 
-    it('fails trying to unlockAllOrNone', async () => {
+    it('fails trying to unlockAllOrNone if a lock cannot be unlocked', async () => {
       const amount = 100
       const time = 1000
       await token.approve(app.address, amount)
@@ -378,6 +375,16 @@ contract('Staking app', accounts => {
       await app.stake(amount, '')
       return assertRevert(async () => {
         await app.moveTokens(owner, other, amount + 1)
+      })
+    })
+
+    it('fails moving more tokens than unlocked', async () => {
+      const amount = 100
+      await token.approve(app.address, amount)
+      await app.stake(amount, '')
+      await app.lockIndefinitely(amount / 2, other, '', '')
+      return assertRevert(async () => {
+        await app.moveTokens(owner, other, amount / 2 + 1)
       })
     })
   })
