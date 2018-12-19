@@ -18,6 +18,7 @@ contract('Payroll, accrued value,', async (accounts) => {
   const SECONDS_IN_A_YEAR = 31557600 // 365.25 days
   const ETH = '0x0'
   const rateExpiryTime = 1000
+  const MAX_UINT256 = new web3.BigNumber(2).pow(256).minus(1)
 
   const salary1 = 1000
   const erc20Token1Decimals = 18
@@ -69,7 +70,8 @@ contract('Payroll, accrued value,', async (accounts) => {
   })
 
   it('fails adding an accrued Value too large', async () => {
-    const accruedValue = new web3.BigNumber(await payroll.getMaxAccruedValue()).plus(1)
+    const accruedValue = MAX_UINT256.plus(1).dividedToIntegerBy(2)
+    await payroll.addAccruedValue(employeeId1, accruedValue)
     return assertRevert(async () => {
       await payroll.addAccruedValue(employeeId1, accruedValue)
     })
