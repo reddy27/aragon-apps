@@ -6,13 +6,13 @@ import {
   TableCell,
   ContextMenu,
   ContextMenuItem,
-  IdentityBadge,
   blockExplorerUrl,
   theme,
 } from '@aragon/ui'
 import provideNetwork from '../lib/provideNetwork'
 import { formatTokenAmount } from '../lib/utils'
 import IconTokens from './icons/IconTokens'
+import LocalIdentityBadge from './LocalIdentityBadge/LocalIdentityBadge'
 
 class TransferRow extends React.PureComponent {
   handleViewTransaction = () => {
@@ -57,12 +57,16 @@ class TransferRow extends React.PureComponent {
 
     if (smallViewMode) {
       return (
-        <TableRow>
+        <StyledTableRow>
           <StyledTableCell>
             <Grid>
-              <div>
+              <div css="overflow: hidden">
                 <div css="display: flex">
-                  <IdentityBadge networkType={network.type} entity={entity} />
+                  <LocalIdentityBadge
+                    networkType={network.type}
+                    entity={entity}
+                    address={entity}
+                  />
                 </div>
               </div>
               <time dateTime={formattedDate} title={formattedDate}>
@@ -74,7 +78,7 @@ class TransferRow extends React.PureComponent {
               </Amount>
             </Grid>
           </StyledTableCell>
-        </TableRow>
+        </StyledTableRow>
       )
     }
 
@@ -86,7 +90,11 @@ class TransferRow extends React.PureComponent {
           </time>
         </NoWrapCell>
         <NoWrapCell>
-          <IdentityBadge networkType={network.type} entity={entity} />
+          <LocalIdentityBadge
+            networkType={network.type}
+            entity={entity}
+            address={entity}
+          />
         </NoWrapCell>
         <NoWrapCell title={reference} css="position: relative">
           <TextOverflow
@@ -121,6 +129,14 @@ class TransferRow extends React.PureComponent {
   }
 }
 
+const StyledTableRow = styled(TableRow)`
+  td:first-child {
+    max-width: 0;
+    width: 100%;
+    overflow: hidden;
+  }
+`
+
 const StyledTableCell = styled(TableCell)`
   &&& {
     border-left-width: 0;
@@ -140,8 +156,9 @@ const Amount = styled.span`
 
 const Grid = styled.div`
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1fr 1fr;
+  grid-template-columns: 1fr auto;
+  grid-template-rows: 1fr auto;
+  grid-column-gap: 10px;
   width: 100%;
 
   time,
