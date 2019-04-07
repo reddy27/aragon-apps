@@ -687,7 +687,7 @@ contract Payroll is EtherTokenConstant, IForwarder, IsContract, AragonApp {
      * @param _type Payment type to be performed
      * @return True if there was at least one token transfer
      */
-    function _transferTokensAmount(uint256 _employeeId, PaymentType _type, uint256 _totalAmount) internal returns (bool somethingPaid) {
+    function _transferTokensAmount(uint256 _employeeId, PaymentType _type, uint256 _totalAmount) internal nonReentrant returns (bool somethingPaid) {
         Employee storage employee = employees[_employeeId];
         string memory paymentReference = _paymentReferenceFor(_type);
         for (uint256 i = 0; i < allowedTokensArray.length; i++) {
