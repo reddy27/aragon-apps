@@ -216,7 +216,7 @@ contract('Payroll reimbursements', ([owner, employee, anotherEmployee, anyone]) 
 
               context('when exchange rates are expired', () => {
                 beforeEach('expire exchange rates', async () => {
-                  await priceFeed.mockSetTimestamp(NOW - TWO_MONTHS)
+                  await priceFeed.mockDecreaseTime(TWO_MONTHS)
                 })
 
                 it('reverts', async () => {
@@ -265,7 +265,7 @@ contract('Payroll reimbursements', ([owner, employee, anotherEmployee, anyone]) 
 
                 context('when exchange rates are expired', () => {
                   beforeEach('expire exchange rates', async () => {
-                    await priceFeed.mockSetTimestamp(NOW - TWO_MONTHS)
+                    await priceFeed.mockDecreaseTime(TWO_MONTHS)
                   })
 
                   it('reverts', async () => {
@@ -418,7 +418,7 @@ contract('Payroll reimbursements', ([owner, employee, anotherEmployee, anyone]) 
 
               context('when exchange rates are expired', () => {
                 beforeEach('expire exchange rates', async () => {
-                  await priceFeed.mockSetTimestamp(NOW - TWO_MONTHS)
+                  await priceFeed.mockDecreaseTime(TWO_MONTHS)
                 })
 
                 it('reverts', async () => {
@@ -470,7 +470,7 @@ contract('Payroll reimbursements', ([owner, employee, anotherEmployee, anyone]) 
 
                   context('when exchange rates are expired', () => {
                     beforeEach('expire exchange rates', async () => {
-                      await priceFeed.mockSetTimestamp(NOW - TWO_MONTHS)
+                      await priceFeed.mockDecreaseTime(TWO_MONTHS)
                     })
 
                     it('reverts', async () => {
@@ -560,7 +560,7 @@ contract('Payroll reimbursements', ([owner, employee, anotherEmployee, anyone]) 
 
                   context('when exchange rates are expired', () => {
                     beforeEach('expire exchange rates', async () => {
-                      await priceFeed.mockSetTimestamp(NOW - TWO_MONTHS)
+                      await priceFeed.mockDecreaseTime(TWO_MONTHS)
                     })
 
                     it('reverts', async () => {
